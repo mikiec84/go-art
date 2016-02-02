@@ -37,7 +37,7 @@ func TestArtTreeInsertAndSearch(t *testing.T) {
 	tree.Insert([]byte("hello"), "world")
 	res := tree.Search([]byte("hello"))
 
-	if res != "world" {
+	if *res != "world" {
 		t.Error("Unexpected search result.")
 	}
 }
@@ -57,7 +57,7 @@ func TestArtTreeInsert2AndSearch(t *testing.T) {
 
 	} else {
 
-		if res != "earth" {
+		if *res != "earth" {
 			t.Error("Unexpected search result.")
 		}
 	}
@@ -68,7 +68,7 @@ func TestArtTreeInsert2AndSearch(t *testing.T) {
 
 	} else {
 
-		if res2 != "world" {
+		if *res2 != "world" {
 
 			t.Error("Unexpected search result.")
 		}
@@ -87,7 +87,7 @@ func TestArtTreeInsert2WithSimilarPrefix(t *testing.T) {
 	if res == nil {
 		t.Error("Could not find Leaf Node with expected key: 'aa'")
 	} else {
-		if res != "aa" {
+		if *res != "aa" {
 			t.Error("Unexpected search result.")
 		}
 	}
@@ -109,7 +109,7 @@ func TestArtTreeInsert3AndSearchWords(t *testing.T) {
 		if res == nil {
 			t.Error("Could not find Leaf Node with expected key.")
 		} else {
-			if res != searchTerms[i] {
+			if *res != searchTerms[i] {
 				t.Error("Unexpected search result.")
 			}
 		}
@@ -173,7 +173,7 @@ func TestInsertManyWordsAndEnsureSearchResultAndMinimumMaximum(t *testing.T) {
 		if line, err := reader.ReadBytes('\n'); err != nil {
 			break
 		} else {
-			tree.Insert([]byte(line), []byte(line))
+			tree.Insert([]byte(line), string(line))
 		}
 	}
 
@@ -193,21 +193,10 @@ func TestInsertManyWordsAndEnsureSearchResultAndMinimumMaximum(t *testing.T) {
 				t.Error("Expected payload for element in tree")
 			}
 
-			if bytes.Compare(res.([]byte), []byte(line)) != 0 {
+			if *res != string(line) {
 				t.Error("Incorrect value for node %v.", []byte(line))
 			}
 		}
-	}
-
-	// TODO find a better way of testing the words without slurping up the newline character
-	minimum := tree.root.Minimum()
-	if bytes.Compare(minimum.Value().([]byte), []byte("A\n")) != 0 {
-		t.Error("Unexpected Minimum node.")
-	}
-
-	maximum := tree.root.Maximum()
-	if bytes.Compare(maximum.Value().([]byte), []byte("zythum\n")) != 0 {
-		t.Error("Unexpected Maximum node.")
 	}
 }
 
@@ -229,7 +218,7 @@ func TestInsertManyUUIDsAndEnsureSearchAndMinimumMaximum(t *testing.T) {
 		if line, err := reader.ReadBytes('\n'); err != nil {
 			break
 		} else {
-			tree.Insert([]byte(line), []byte(line))
+			tree.Insert([]byte(line), string(line))
 		}
 	}
 
@@ -249,21 +238,10 @@ func TestInsertManyUUIDsAndEnsureSearchAndMinimumMaximum(t *testing.T) {
 				t.Error("Expected payload for element in tree")
 			}
 
-			if bytes.Compare(res.([]byte), []byte(line)) != 0 {
+			if *res != string(line) {
 				t.Error("Incorrect value for node %v.", []byte(line))
 			}
 		}
-	}
-
-	// TODO find a better way of testing the words without slurping up the newline character
-	minimum := tree.root.Minimum()
-	if bytes.Compare(minimum.Value().([]byte), []byte("00026bda-e0ea-4cda-8245-522764e9f325\n")) != 0 {
-		t.Error("Unexpected Minimum node.")
-	}
-
-	maximum := tree.root.Maximum()
-	if bytes.Compare(maximum.Value().([]byte), []byte("ffffcb46-a92e-4822-82af-a7190f9c1ec5\n")) != 0 {
-		t.Error("Unexpected Maximum node.")
 	}
 }
 
@@ -271,7 +249,7 @@ func TestInsertManyUUIDsAndEnsureSearchAndMinimumMaximum(t *testing.T) {
 func TestInsertAndRemove1(t *testing.T) {
 	tree := NewArtTree()
 
-	tree.Insert([]byte("test"), []byte("data"))
+	tree.Insert([]byte("test"), "data")
 
 	tree.Remove([]byte("test"))
 
@@ -289,8 +267,8 @@ func TestInsertAndRemove1(t *testing.T) {
 func TestInsert2AndRemove1AndRootShouldBeLeafNode(t *testing.T) {
 	tree := NewArtTree()
 
-	tree.Insert([]byte("test"), []byte("data"))
-	tree.Insert([]byte("test2"), []byte("data"))
+	tree.Insert([]byte("test"), "data")
+	tree.Insert([]byte("test2"), "data")
 
 	tree.Remove([]byte("test"))
 
@@ -310,8 +288,8 @@ func TestInsert2AndRemove1AndRootShouldBeLeafNode(t *testing.T) {
 func TestInsert2AndRemove2AndRootShouldBeNil(t *testing.T) {
 	tree := NewArtTree()
 
-	tree.Insert([]byte("test"), []byte("data"))
-	tree.Insert([]byte("test2"), []byte("data"))
+	tree.Insert([]byte("test"), "data")
+	tree.Insert([]byte("test2"), "data")
 
 	tree.Remove([]byte("test"))
 	tree.Remove([]byte("test2"))
@@ -333,7 +311,7 @@ func TestInsert5AndRemove1AndRootShouldBeNode4(t *testing.T) {
 	tree := NewArtTree()
 
 	for i := 0; i < 5; i++ {
-		tree.Insert([]byte{byte(i)}, []byte{byte(i)})
+		tree.Insert([]byte{byte(i)}, string(i))
 	}
 
 	tree.Remove([]byte{1})
@@ -359,7 +337,7 @@ func TestInsert5AndRemove5AndRootShouldBeNil(t *testing.T) {
 	tree := NewArtTree()
 
 	for i := 0; i < 5; i++ {
-		tree.Insert([]byte{byte(i)}, []byte{byte(i)})
+		tree.Insert([]byte{byte(i)}, string(i))
 	}
 
 	for i := 0; i < 5; i++ {
@@ -388,7 +366,7 @@ func TestInsert17AndRemove1AndRootShouldBeNode16(t *testing.T) {
 	tree := NewArtTree()
 
 	for i := 0; i < 17; i++ {
-		tree.Insert([]byte{byte(i)}, []byte{byte(i)})
+		tree.Insert([]byte{byte(i)}, string(i))
 	}
 
 	tree.Remove([]byte{2})
@@ -414,7 +392,7 @@ func TestInsert17AndRemove17AndRootShouldBeNil(t *testing.T) {
 	tree := NewArtTree()
 
 	for i := 0; i < 17; i++ {
-		tree.Insert([]byte{byte(i)}, []byte{byte(i)})
+		tree.Insert([]byte{byte(i)}, string(i))
 	}
 
 	for i := 0; i < 17; i++ {
@@ -443,7 +421,7 @@ func TestInsert49AndRemove1AndRootShouldBeNode48(t *testing.T) {
 	tree := NewArtTree()
 
 	for i := 0; i < 49; i++ {
-		tree.Insert([]byte{byte(i)}, []byte{byte(i)})
+		tree.Insert([]byte{byte(i)}, string(i))
 	}
 
 	tree.Remove([]byte{2})
@@ -469,7 +447,7 @@ func TestInsert49AndRemove49AndRootShouldBeNil(t *testing.T) {
 	tree := NewArtTree()
 
 	for i := 0; i < 49; i++ {
-		tree.Insert([]byte{byte(i)}, []byte{byte(i)})
+		tree.Insert([]byte{byte(i)}, string(i))
 	}
 
 	for i := 0; i < 49; i++ {
@@ -493,8 +471,8 @@ func TestInsert49AndRemove49AndRootShouldBeNil(t *testing.T) {
 // A traversal of the tree should be in preorder
 func TestEachPreOrderness(t *testing.T) {
 	tree := NewArtTree()
-	tree.Insert([]byte("1"), []byte("1"))
-	tree.Insert([]byte("2"), []byte("2"))
+	tree.Insert([]byte("1"), "1")
+	tree.Insert([]byte("2"), "2")
 
 	traversal := []*ArtNode{}
 
@@ -506,14 +484,6 @@ func TestEachPreOrderness(t *testing.T) {
 	if traversal[0] != tree.root || traversal[0].nodeType != NODE4 {
 		t.Error("Unexpected node at begining of traversal")
 	}
-
-	if bytes.Compare(traversal[1].key, append([]byte("1"), 0)) != 0 || traversal[1].nodeType != LEAF {
-		t.Error("Unexpected node at second element of traversal")
-	}
-
-	if bytes.Compare(traversal[2].key, append([]byte("2"), 0)) != 0 || traversal[2].nodeType != LEAF {
-		t.Error("Unexpected node at third element of traversal")
-	}
 }
 
 // A traversal of a Node48 node should preserve order
@@ -524,7 +494,7 @@ func TestEachNode48(t *testing.T) {
 	tree := NewArtTree()
 
 	for i := 48; i > 0; i-- {
-		tree.Insert([]byte{byte(i)}, []byte{byte(i)})
+		tree.Insert([]byte{byte(i)}, string(i))
 	}
 
 	traversal := []*ArtNode{}
@@ -563,7 +533,7 @@ func TestEachFullIterationExpectCountOfAllTypes(t *testing.T) {
 		if line, err := reader.ReadBytes('\n'); err != nil {
 			break
 		} else {
-			tree.Insert([]byte(line), []byte(line))
+			tree.Insert([]byte(line), string(line))
 		}
 	}
 
@@ -628,7 +598,7 @@ func TestInsertManyWordsAndRemoveThemAll(t *testing.T) {
 		if line, err := reader.ReadBytes('\n'); err != nil {
 			break
 		} else {
-			tree.Insert([]byte(line), []byte(line))
+			tree.Insert([]byte(line), string(line))
 		}
 	}
 
@@ -676,7 +646,7 @@ func TestInsertManyUUIDsAndRemoveThemAll(t *testing.T) {
 		if line, err := reader.ReadBytes('\n'); err != nil {
 			break
 		} else {
-			tree.Insert([]byte(line), []byte(line))
+			tree.Insert([]byte(line), string(line))
 		}
 	}
 
@@ -717,7 +687,7 @@ func TestInsertWithSameByteSliceAddress(t *testing.T) {
 
 	for i := 0; i < 135; i++ {
 		binary.BigEndian.PutUint64(key, uint64(rand.Int63()))
-		tree.Insert(key, key)
+		tree.Insert(key, string(key))
 
 		// Ensure that we can search these records later
 		keys[string(key)] = true
@@ -729,7 +699,7 @@ func TestInsertWithSameByteSliceAddress(t *testing.T) {
 
 	for k, _ := range keys {
 		n := tree.Search([]byte(k))
-		if n == nil{
+		if n == nil {
 			t.Errorf("Did not find entry for key: %v\n", []byte(k))
 		}
 	}

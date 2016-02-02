@@ -18,21 +18,21 @@ func NewArtTree() *ArtTree {
 }
 
 // Returns the node that contains the passed in key, or nil if not found.
-func (t *ArtTree) Search(key []byte) string {
+func (t *ArtTree) Search(key []byte) *string {
 	key = ensureNullTerminatedKey(key)
 	return t.searchHelper(t.root, key, 0)
 }
 
 // Recursive search helper function that traverses the tree.
 // Returns the node that contains the passed in key, or nil if not found.
-func (t *ArtTree) searchHelper(current *ArtNode, key []byte, depth int) string {
+func (t *ArtTree) searchHelper(current *ArtNode, key []byte, depth int) *string {
 	// While we have nodes to search
 	for current != nil {
 
 		// Check if the current is a match
 		if current.IsLeaf() {
 			if current.IsMatch(key) {
-				return current.value
+				return &current.value
 			}
 
 			// Bail if no match

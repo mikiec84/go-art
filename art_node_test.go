@@ -41,7 +41,7 @@ func TestIsLeaf(t *testing.T) {
 func TestValue(t *testing.T) {
 	leaf := &ArtNode{nodeType: LEAF, value: "foo"}
 
-	if leaf.Value() != "foo" {
+	if *leaf.Value() != "foo" {
 		t.Error("Unexpected value for leaf node")
 	}
 
@@ -57,7 +57,7 @@ func TestAddChildAndFindChildForAllNodeTypes(t *testing.T) {
 
 		// Fill it up
 		for i := 0; i < n.MaxSize(); i++ {
-			newChild := &ArtNode{value: byte(i)}
+			newChild := &ArtNode{value: string(i)}
 			n.AddChild(byte(i), newChild)
 		}
 
@@ -69,7 +69,7 @@ func TestAddChildAndFindChildForAllNodeTypes(t *testing.T) {
 				t.Error("Could not find child as expected")
 			}
 
-			if x.value.(byte) != byte(i) {
+			if x.value != string(i) {
 				t.Error("Child value does not match as expected")
 			}
 		}
@@ -87,7 +87,7 @@ func TestIndexForAllNodeTypes(t *testing.T) {
 
 		// Fill it up
 		for i := 0; i < n.MaxSize(); i++ {
-			newChild := &ArtNode{value: byte(i)}
+			newChild := &ArtNode{value: string(i)}
 			n.AddChild(byte(i), newChild)
 		}
 
@@ -215,7 +215,7 @@ func TestShrink(t *testing.T) {
 }
 
 func TestNewLeafNode(t *testing.T) {
-	key := []byte{'a', 'r', 't' }
+	key := []byte{'a', 'r', 't'}
 	value := "tree"
 	l := NewLeafNode(key, value)
 

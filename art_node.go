@@ -648,12 +648,12 @@ func (n *ArtNode) copyMeta(other *ArtNode) {
 }
 
 // Returns the value of the given node, or nil if it is not a leaf.
-func (n *ArtNode) Value() string {
+func (n *ArtNode) Value() *string {
 	if n.nodeType != LEAF {
 		return nil
 	}
 
-	return n.value
+	return &n.value
 }
 
 // Returns the smallest of the two passed in integers.
