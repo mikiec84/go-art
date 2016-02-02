@@ -18,14 +18,14 @@ func NewArtTree() *ArtTree {
 }
 
 // Returns the node that contains the passed in key, or nil if not found.
-func (t *ArtTree) Search(key []byte) interface{} {
+func (t *ArtTree) Search(key []byte) string {
 	key = ensureNullTerminatedKey(key)
 	return t.searchHelper(t.root, key, 0)
 }
 
 // Recursive search helper function that traverses the tree.
 // Returns the node that contains the passed in key, or nil if not found.
-func (t *ArtTree) searchHelper(current *ArtNode, key []byte, depth int) interface{} {
+func (t *ArtTree) searchHelper(current *ArtNode, key []byte, depth int) string {
 	// While we have nodes to search
 	for current != nil {
 
@@ -57,7 +57,7 @@ func (t *ArtTree) searchHelper(current *ArtNode, key []byte, depth int) interfac
 }
 
 // Inserts the passed in value that is indexed by the passed in key into the ArtTree.
-func (t *ArtTree) Insert(key []byte, value interface{}) {
+func (t *ArtTree) Insert(key []byte, value string) {
 	key = ensureNullTerminatedKey(key)
 	t.insertHelper(t.root, &t.root, key, value, 0)
 }
@@ -77,7 +77,7 @@ func (t *ArtTree) Insert(key []byte, value interface{}) {
 //
 // If there is no child at the specified key at the current depth of traversal, a new leaf node
 // is created and inserted at this position.
-func (t *ArtTree) insertHelper(current *ArtNode, currentRef **ArtNode, key []byte, value interface{}, depth int) {
+func (t *ArtTree) insertHelper(current *ArtNode, currentRef **ArtNode, key []byte, value string, depth int) {
 	// @spec: Usually, the leaf can
 	//        simply be inserted into an existing inner node, after growing
 	//        it if necessary.

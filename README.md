@@ -1,17 +1,3 @@
-```
-                                        __      
-                                       /\ \__   
-   __     ___               __     _ __\ \ ,_\  
- /'_ `\  / __`\  _______  /'__`\  /\`'__\ \ \/  
-/\ \L\ \/\ \L\ \/\______\/\ \L\.\_\ \ \/ \ \ \_ 
-\ \____ \ \____/\/______/\ \__/.\_\\ \_\  \ \__\
- \/___L\ \/___/           \/__/\/_/ \/_/   \/__/
-   /\____/                                      
-   \_/__/                                       
-
-an adaptive radix tree implementation in go
-```
-[![Build Status](https://travis-ci.org/kellydunn/go-art.png)](https://travis-ci.org/kellydunn/go-art)
 # what
 
 An Adaptive Radix Tree is an indexing data structure similar to traditional radix trees, but uses internal nodes that grow and shrink intelligently with consecutive inserts and removals.
@@ -46,29 +32,4 @@ res := tree.Search([]byte("art trees"))
 // Inspect your result!
 fmt.Printf("%s\n", res) // "are rad"
 ```
-
-# documentation
-
-Check out the documentation on godoc.org: http://godoc.org/github.com/kellydunn/go-art
-
-# implementation details
-
-  - It's currently unclear if golang supports SIMD instructions, so Node16s make use of Binary Search for lookups instead of the originally specified manner.
-  - Search is currently implemented in the pessimistic variation as described in the specification linked below.  
-
-# performance
-
-Worst-case scenarios for basic operations are: 
-
-| Search | Insert | Removal |
-| ------ |:------:| -------:|
-|  O(k)  | O(k)+c | O(k)+c  |
-
-  - `k` is the length of the key that we wish to insert.  With prefix compression, this can be faster than Hashing functions, since hashing functions are O(k) operations.
-  - `c` is the number of children at the parent node of insertion or removal. This accounts for the growing or shrinking of the inner node.  At the worst case, this is number is 48; the maximum number of children to move when transitioning between the biggest types of inner nodes.
-
-# releated works
-
-  - http://www-db.in.tum.de/~leis/papers/ART.pdf (Specification)
-  - http://www-db.in.tum.de/~leis/index/ART.tgz (C++ reference Implementation)
-  - https://github.com/armon/libart (an ANSI C Implementation)
+This fork makes all values in the ART nodes strings.
